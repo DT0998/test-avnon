@@ -1,0 +1,65 @@
+<div class="bg-white p-2.5">
+    <h2 class="font-bold">Add a New Question</h2>
+    <!-- form -->
+    <div>
+        <div class="mt-4 flex flex-col">
+            <select #questionTypeField [ngModel]="formService.questionType()"
+                (change)="formService.selectQuestionType(questionTypeField.value)" class="border border-black p-2">
+                <option value="checkbox">Checkbox List</option>
+                <option value="paragraph">Paragraph</option>
+            </select>
+
+            <!-- question -->
+            <div class="mt-2 border border-black w-full h-full">
+                <input type="text" class="mr-2 p-2 w-full" placeholder="Type question here" #questionNameField
+                    (change)="formService.handleQuestionName(questionNameField.value)" [value]="formService.question()">
+            </div>
+
+            <!-- If Paragraph is selected -->
+            <div *ngIf="formService.questionType() === 'paragraph'" class="mt-2">
+                <textarea type="text" #paragraphAnswerField [value]="formService.paragraphAnswer()"
+                    (change)="formService.handleParagraphAnswer(paragraphAnswerField.value)"
+                    class="p-2 w-full h-16 border border-black" placeholder="Add Answer Option"></textarea>
+                <p class="text-red-500" *ngIf="formService.hasRequired()">This field is required</p>
+            </div>
+
+            <!-- If Checkbox List is selected -->
+            <div *ngIf="formService.questionType() === 'checkbox'" class="mt-2">
+                <div *ngFor="let option of formService.checkboxAnswers()" class="mb-2 w-full h-full">
+                    <div class="border border-black">
+                        <input type="text" #checkboxAnswersField [value]="option.name"
+                            (change)="formService.handleCheckboxAnswer(checkboxAnswersField.value,option.id)"
+                            class="mr-2 p-2 w-full" placeholder="Add Answer Option" [id]="option.id">
+                    </div>
+                    <p class="text-red-500" *ngIf="formService.hasRequired()">This field is required</p>
+                </div>
+                <button *ngIf="formService.checkboxAnswers().length < 5" (click)="formService.addOption()"
+                    class="flex text-blue-600">+ Add
+                    another
+                    option</button>
+            </div>
+
+            <div class="text-blue-600" *ngIf="formService.questionType() === 'checkbox'">
+                <input type="checkbox" id="allowOthers" name="allowOthers" #isAllowOthersField
+                    [value]="formService.isAllowOthers()"
+                    (change)="formService.handleAllowOthers(isAllowOthersField.checked)"
+                    [checked]="formService.isAllowOthers()">
+                <label for="allowOthers" class="ml-2">Allow users to specify their own answers</label>
+            </div>
+
+            <div class="text-blue-600">
+                <input type="checkbox" id="required" name="required" #isRequiredField [value]="formService.isRequired()"
+                    (change)="formService.handleIsRequired(isRequiredField.checked)"
+                    [checked]="formService.isRequired()">
+                <label for="required" class="ml-2">This field is required</label>
+            </div>
+
+            <div class="w-full flex justify-end">
+                <button class="p-2 border border-black bg-white w-1/3" type="submit" (click)="handleSubmit()"
+                    [disabled]="formService.hasRequired()">
+                    Submit
+                </button>
+            </div>
+        </div>
+    </div>
+</div>

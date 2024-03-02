@@ -1,0 +1,42 @@
+<div class="bg-white p-2.5">
+    <div class="mt-4 flex flex-col">
+        <div *ngFor="let form of formService.formBuilder().questions">
+            <!-- paragraph -->
+            <div *ngIf="form.questionType === 'paragraph'">
+                <label class="font-bold" [for]="'question_' + form.id">{{ form.question }}</label>
+                <textarea class="bg-gray-50 border border-gray-300 text-gray-900 text-sm block w-full p-2.5 h-16"
+                    [(ngModel)]="form!.paragraphAnswer!.content"
+                    (blur)="formService.updateRequiredParagraphAnswer(form)"></textarea>
+                <p class="text-red-500" *ngIf="form!.paragraphAnswer?.required">This field is
+                    required</p>
+            </div>
+            <!-- checkbox -->
+            <div *ngIf="form.questionType === 'checkbox'">
+                <h2 class="font-bold">{{form.question}}</h2>
+                <div *ngFor="let answer of form.checkboxAnswers">
+                    <div *ngIf="answer.content !== ''">
+                        <input type="checkbox" id="{{answer.name}}" name="{{answer.name}}" [checked]="answer.checked"
+                            (change)="formService.updateCheckedAnswer(answer)">
+                        <input type="text" class="ml-2" [(ngModel)]="answer.title"
+                            (blur)="formService.updateAnswerCheckbox(answer,answer.id)">
+                    </div>
+                    <div *ngIf="answer.content === ''">
+                        <input type="checkbox" id="{{answer.name}}" name="{{answer.name}}" [checked]="answer.checked"
+                            (change)="formService.updateCheckedAnswer(answer)">
+                        <label for="{{answer.name}}" class="ml-2">{{answer.title}}</label>
+                        <p class="text-red-500" *ngIf="answer.required">This field is required</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button class="font-bold underline flex" (click)="openModalAddNewQuestion()">
+            Add New Question
+        </button>
+        <div class="w-full flex justify-end">
+            <button class="p-2 border border-black bg-gray-300 w-1/2" (click)="navigateAnswers()"
+                [disabled]="formService.hasEmptyRequiredFields()">
+                Review my answers >
+            </button>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,21 @@
+<div class="bg-white p-2.5">
+    <div *ngFor="let form of formService.formBuilder().questions">
+        <!-- paragraph -->
+        <div *ngIf="form.questionType === 'paragraph'">
+            <label class="font-bold" for="introduction">{{form.question}}</label>
+            <p>{{form.paragraphAnswer?.content}}</p>
+        </div>
+        <!-- checkbox -->
+        <div *ngIf="form.questionType === 'checkbox'">
+            <h2 class="font-bold">{{form.question}}</h2>
+            <div *ngFor="let answer of form.checkboxAnswers">
+                <div *ngIf="answer.checked">
+                    <p>{{answer.title}}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <button class="underline flex mt-2" (click)="navigateBuilder()">
+        Back to Forms Builder
+    </button>
+</div>
